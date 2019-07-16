@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自增案例</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function () {
+            $('#btnAdd').click(function () {
+                // 1.获取div值
+                num = $('#num').text();
+                // 2. 发起ajax请求，把num进行提交
+                $.get('/get_add/?res='+num, function(data){
+                    // {'res':结果}
+                    $('#num').text(data.res);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="num">0</div>
+<input type="button" value="自增" id="btnAdd">
+</body>
+</html>
