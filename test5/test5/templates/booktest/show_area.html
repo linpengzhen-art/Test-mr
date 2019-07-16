@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>省市县选择案例</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function () {
+            // 获取prov下拉列表框
+            prov = $('#prov');
+
+            // 发起/prov/请求获取省级地区信息
+            $.get('/prov/', function (data) {
+                // 进行操作
+                areas = data.data;
+
+                /*
+                for (i=0; i < areas.length; i++){
+                    // console.log(areas[i]);
+                    option_str = '<option value="'+areas[i][0]+'">'+areas[i][1]+'</option>';
+                    prov.append(option_str);
+                }
+                 */
+                $.each(areas, function(index, item){
+                    // console.log(index+':'+item);
+                    option_str = '<option value="'+item[0]+'">'+item[1]+'</option>';
+                    prov.append(option_str);
+                });
+            });
+
+            // 绑定prov的change事件
+            $('#prov').change(function () {
+                city = $('#city');
+                // 清空city下拉列表框
+                city.empty().append('<option >---请选择市---</option>');
+
+                dis = $('#dis');
+                // 清空dis下拉列表框
+                dis.empty().append('<option >---请选择县---</option>');
+                // 发起/city/获取省下面的市的信息
+                $.get('/city/'+$(this).val()+'/', function (data) {
+                    areas = data.data;
+                    $.each(areas, function(index, item){
+                        option_str = '<option value="'+item[0]+'">'+item[1]+'</option>';
+                        city.append(option_str);
+                    })
+                })
+            });
+
+
+            // 绑定city的change事件
+            $('#city').change(function () {
+                dis = $('#dis');
+                // 清空dis下拉列表框
+                dis.empty().append('<option >---请选择县---</option>');
+                // 发起/dist/获取市下面的县的信息
+                $.get('/city/'+$(this).val()+'/', function (data) {
+                    areas = data.data;
+                    $.each(areas, function(index, item){
+                        option_str = '<option value="'+item[0]+'">'+item[1]+'</option>';
+                        dis.append(option_str);
+                    })
+                })
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+<select id="prov">
+    <option>---请选择省---</option>
+</select>
+<select id="city">
+    <option >---请选择市---</option>
+</select>
+<select id="dis">
+    <option >---请选择县---</option>
+</select>
+</body>
+</html>
